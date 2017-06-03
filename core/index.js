@@ -11,6 +11,7 @@ const LWError = require("../utils/error");
 const logger = require("../utils/logger");
 const deviceUtils = require("../utils/device");
 
+const LAB_MANAGER = "Kevin";
 const DEFAULT_MESSAGE = "Oh no!  It looks like you don't have access.";
 
 const lockWolf = {
@@ -34,7 +35,7 @@ const lockWolf = {
         console.timeEnd('getUserAndDevice');
 
         if (!user) {
-            throw new LWError("It looks like we haven't met.  Please contact the lab administrator for access!");
+            throw new LWError(`It looks like we haven't met.  I've contacted ${LAB_MANAGER}, the lab manager.  He'll be here soon!`);
         } else if (!device) {
             throw new Error("Strange, this device isn't in the system.  Please contact the lab administrator so they can investigate the issue!");
         }
@@ -45,7 +46,7 @@ const lockWolf = {
         console.timeEnd('isCertified');
 
         if (!access) {
-            throw new Error(`Hmm, it looks like you haven't passed the required certification in order to use a ${deviceUtils.getFriendlyCategory(device)}.`);
+            throw new Error(`Hmm, it looks like you haven't passed the required certification in order to use an ${deviceUtils.getFriendlyCategory(device)}.`);
         }
 
         // Checks if the user is scheduled to use the device
@@ -54,14 +55,16 @@ const lockWolf = {
         console.timeEnd('isAvailable');
 
         if (!availability.available) {
-            throw new Error(`Sorry, someone has already reserved the ${deviceUtils.getFriendlyCategory(device)}.`);
+            throw new Error(`Sorry ${user.firstName}, someone has already reserved the ${deviceUtils.getFriendlyCategory(device)}.`);
         }
         
         const minutesAllocated = availability.minutesAllocated
         authenticated = true;
+        // Changing to seconds for the demo
+        const pluralMinute = (availability.minutesAllocated === 1) ? "second" : "seconds";
         message = (availability.minutesAllocated) ?
-            `You're all set for the next ${availability.minutesAllocated} minutes, ${user.firstName}!`
-            : `You're all set ${user.firstName}!`;
+            `Hey ${user.firstName}, you're all set for the next ${availability.minutesAllocated} ${pluralMinute}!`
+            : `Hey ${user.firstName}, you're all set ${user.firstName}!`;
         
         console.timeEnd('authenticate');
         return {

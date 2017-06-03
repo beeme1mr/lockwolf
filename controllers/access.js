@@ -10,8 +10,9 @@ const deviceUtils = require("../utils/device");
 const LWError = require("../utils/error");
 const logger = require("../utils/logger");
 
-const MAX_TIME_REQUIRED = 30;
-const MIN_CUTOFF_TIME = 10;
+// Changing for demo purposes
+const MAX_TIME_REQUIRED = 1;
+const MIN_CUTOFF_TIME = 1;
 
 const access = {
     /**
@@ -61,7 +62,9 @@ const access = {
             //TODO add new event to cal
             logger.debug("It's available.");
             available = true;
-            minutesAllocated = moment(moment().ceil(30, "minutes").add(30, "minutes")).diff(moment(), "minutes");
+            //minutesAllocated = moment(moment().ceil(30, "minutes").add(30, "minutes")).diff(moment(), "minutes");
+            // Changed for demo purposes
+            minutesAllocated = 15;
         }
 
         return {
